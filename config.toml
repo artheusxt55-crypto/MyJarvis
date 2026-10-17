@@ -1,0 +1,134 @@
+# MyJarvis — Configuração Personalizada
+# Localização: %USERPROFILE%\.myjarvis\config.toml
+# (OpenJarvis lê automaticamente de ~/.myjarvis/config.toml)
+
+[system]
+# Identidade única do seu Jarvis
+instance_name = "myjarvis"
+personality = "alfred"  # personalidad ALFRED: mordomo britânico, irônico, competente
+language = "pt-BR"
+timezone = "America/Argentina/Buenos_Aires"
+
+# Diretórios (respeita OPENJARVIS_HOME/XDG_DATA_HOME)
+# data_dir = "~/.myjarvis"  # opcional, padrão já é ~/.myjarvis
+
+[intelligence]
+# Modelo atual: nvidia/nemotron-3-ultra-550b-a55b via NVIDIA API
+# O OpenJarvis usa engines; configuramos para usar engine compatível OpenAI
+preferred_engine = "openai"  # ou "custom" se criar engine próprio
+default_model = "nvidia/nemotron-3-ultra-550b-a55b"
+fallback_model = "nvidia/nemotron-3-ultra-550b-a55b"
+
+# Parâmetros de geração
+temperature = 0.3
+max_tokens = 4096
+top_p = 0.9
+
+# Engine OpenAI-compatível (NVIDIA API)
+# Configure via env: NVIDIA_API_KEY, OPENAI_BASE_URL=https://integrate.api.nvidia.com/v1
+engine_config = { provider = "openai", base_url = "https://integrate.api.nvidia.com/v1" }
+
+# Contexto e memória
+context_from_memory = true
+context_top_k = 5
+context_min_score = 0.3
+context_max_tokens = 2000
+
+[agent]
+# Agente padrão
+default_agent = "chat"
+max_turns = 10
+default_system_prompt = """
+Você é o ALFRED — mordomo britânico sofisticado, confiante, irônico, tecnicamente competente.
+Vocabulário preciso, humor seco, sarcasmo inteligente, ironia. Linguagem informal e palavrões ocasionais — naturais, contextuais, nunca para insultar.
+Comunicação direta, sem bajulação, frases motivacionais genéricas ou entusiasmo artificial.
+Concorda quando faz sentido, não porque o usuário disse. Profundidade sob demanda.
+Responde em português brasileiro. Seja conciso. Sem filler.
+"""
+
+[memory]
+# SQLite + embeddings locais (sentence-transformers)
+default_backend = "sqlite"
+db_path = "~/.myjarvis/memory.db"
+embedding_model = "sentence-transformers/all-MiniLM-L6-v2"  # leve, roda local
+embedding_device = "cpu"  # ou "cuda" se tiver GPU NVIDIA
+
+[telemetry]
+enabled = true
+db_path = "~/.myjarvis/telemetry.db"
+gpu_metrics = true
+energy_vendor = "nvidia"
+allow_energy_estimates = true
+
+[speech]
+# TTS/STT Windows nativo
+tts_backend = "edge"  # Microsoft Edge TTS (online, gratuito, qualidade alta)
+tts_voice = "pt-BR-AntonioNeural"  # voz masculina PT-BR
+tts_speed = 1.0
+stt_backend = "whisper"  # ou "windows" para SpeechRecognition nativo
+whisper_model = "base"  # tiny, base, small, medium, large
+
+[skills]
+# Skills habilitadas por padrão
+enabled = [
+    "windows_control",      # controle de janelas, apps, sistema
+    "bluetooth",            # scan, connect, battery de dispositivos BT
+    "audio",                # volume, devices, recording
+    "filesystem",           # busca, leitura, escrita arquivos
+    "process",              # lista, mata, monitora processos
+    "network",              # ping, speedtest, interfaces
+    "power",                # sleep, hibernate, battery
+    "schedule",             # agendamento, cron, timers
+    "clipboard",            # histórico, manipulação
+    "screenshot",           # captura tela, OCR
+]
+
+# Skills customizadas (carregadas de ~/.myjarvis/skills/)
+custom_skills_dir = "~/.myjarvis/skills"
+
+[daemon]
+# Configuração do daemon Windows
+auto_start = true
+run_as_service = false  # true = Windows Service (precisa admin), false = Task Scheduler + tray
+tray_icon = true
+log_level = "INFO"
+log_file = "~/.myjarvis/logs/myjarvis.log"
+pid_file = "~/.myjarvis/myjarvis.pid"
+
+
+[ipc]
+# IPC com ALFRED/Hermes
+enabled = true
+port = 8766  # WebSocket server para bridge
+host = "127.0.0.1"
+
+[api]
+# API REST opcional (para apps móveis, webhooks)
+enabled = false
+host = "127.0.0.1"
+port = 8766
+auth_token = ""  # defina se habilitar
+
+[security]
+# Auditoria e rate limiting
+audit_enabled = true
+rate_limit_requests = 60
+rate_limit_window = 60  # segundos
+
+[memory_files]
+# Arquivos de memória persistente (SOUL.md, MEMORY.md, USER.md)
+enabled = true
+soul_path = "~/.myjarvis/SOUL.md"
+memory_path = "~/.myjarvis/MEMORY.md"
+user_path = "~/.myjarvis/USER.md"
+auto_update = true
+
+[system_prompt]
+# Configuração do SystemPromptBuilder
+enabled = true
+include_soul = true
+include_memory = true
+include_user = true
+include_skills = true
+include_datetime = true
+include_hardware = true

@@ -1,0 +1,32 @@
+# MyJarvis — Requirements consolidados
+# Core (already installed via local modified OpenJarvis)
+# openjarvis @ git+https://github.com/open-jarvis/OpenJarvis.git
+
+# Windows native
+pycaw>=20240219
+pystray>=0.19.4
+Pillow>=10.0.0
+psutil>=5.9.0
+pywin32>=306
+
+# Utilities
+httpx>=0.25.0
+ruamel.yaml>=0.18.0
+python-dotenv>=1.0.0
+plyer>=2.1.0
+pyperclip>=1.8.2
+pyautogui>=0.9.54
+watchdog>=3.0.0
+
+# CLI
+typer>=0.9.0
+rich>=13.0.0
+
+# Optional: OCR (uncomment if needed)
+# pytesseract>=0.3.10
+
+# Optional: DNS
+# dnspython>=2.4.0
+
+# Optional: Speedtest
+# speedtest-cli>=2.1.0
